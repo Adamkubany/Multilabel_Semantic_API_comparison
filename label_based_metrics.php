@@ -145,7 +145,7 @@
             '1000new_img_9_deepdetect', '1000new_img_10_overfeat', '1000new_img_11_tensorflow','1000new_img_12_InceptionResNetV2',
             '1000new_img_13_mobilenet_v2', '1000new_img_14_yolo_v3', '1000new_img_15_resnet_coco', '1000new_img_16_yolo_v3_coco',
             '1000new_img_17_resnet_imgnet', '1000new_img_18_vgg19'];
-        $APIs = ['1000new_img_18_vgg19'];
+      //  $APIs = ['1000new_img_18_vgg19'];
         $topPredOptions = [5, 3, 1];
 //        $topPredOptions = [1];
         $imagesTable = '1000new_images';
@@ -338,7 +338,7 @@
                 $measures["F1_Micro"] = (2 * $measures["Precision_Micro"] * $measures["Recall_Micro"]) / ($measures["Precision_Micro"] + $measures["Recall_Micro"]);
                 #########echo "API: $apiObjTable, top $topPredObj<br>";
                // ($writeToFile) ? fputcsv($fpImgMeas, ['all meas']) : "";
-                ($writeToFile) ? fputcsv($fpImgMeas, $measures) : "";
+           //     ($writeToFile) ? fputcsv($fpImgMeas, $measures) : "";
 
                 ($writeToFile) ? fputcsv($fpAllMeas, array_merge([$apiObjTable, $topPredObj, $numOfImages, $numOfObjects],$measures)) : "";
                 
