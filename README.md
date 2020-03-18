@@ -13,7 +13,7 @@ To run the metrics and functionality, you need the following:
 Once you installed the pre-requisites, you can run some of the functionalities. The results for each calculation will be saved in the "results" folder.
  1. To calculate the label-based metrics. Run the PHP script (usually from the PHP installed folder)
      > $php file_path\label_based_metrics.php
- 2. To calculate the semantic and example-based metrics, count the "unknown" labels or calc the labels frequencies, run the following Python script. 
+ 2. To calculate the semantic and example-based metrics, count the "unknown" labels or calc the labels frequencies, run the following Python script and follow the onscreen options. 
      >$python example_based_metrics.py
 
 ## Reference
