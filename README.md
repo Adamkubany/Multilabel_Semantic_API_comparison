@@ -1,7 +1,7 @@
 # Semantic Comparison of State-of-the-Art Deep Learning APIs for Image Multi-Label Classification
 Some functionallity and metrics calculation implemented for the "[Semantic Comparison of State-of-the-Art Deep Learning APIs for Image Multi-Label Classification](https://arxiv.org/abs/1903.09190)" paper.
 
-# Installation
+## Installation
 To run the metrics and functionality, you need the following:
  1. Create a MySQL database named "infomedia".
  2. Import the CSVs in the "Data" folder to the "infomedia" DB.
