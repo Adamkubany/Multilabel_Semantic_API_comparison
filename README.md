@@ -24,4 +24,4 @@ Once you installed the pre-requisites, you can run some of the functionalities. 
 	journal = {arXiv preprint arXiv: 1903.09190}, 
 	author = {Kubany, Adam and Ben Ishay, Shimon and Ohayon, Ruben-Sacha and Shmilovici, Armin and Rokach, Lior and Doitshman, Tomer} 
 	}
-For questions you can contact Adam Kubany via [email](adamku@post.bg.ac.il).
+For questions please contact Adam Kubany via [email](adamku@post.bg.ac.il).
