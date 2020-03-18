@@ -10,7 +10,7 @@ To run the metrics and functionality, you need the following:
  5. You need Python version 3.6+ and PHP version PHP. For the MySQL and PHP installation we recommend the  [WAMP package](http://www.wampserver.com/en/).
 
 ## Functionality
-Once you installed the pre-requisites, you can run some of the functionalities. The results for each calculation will be saved in the "Results" folder.
+Once you installed the pre-requisites, you can run some of the functionalities. The results for each calculation will be saved in the "results" folder.
  1. To calculate the label-based metrics. Run the PHP script (usually from the PHP installed folder)
      > $php file_path\label_based_metrics.php
  2. To calculate the semantic and example-based metrics, count the "unknown" labels or calc the labels frequencies, run the following Python script. 
