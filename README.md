@@ -16,7 +16,7 @@ Once you installed the pre-requisites, you can run some of the functionalities. 
  2. To calculate the semantic and example-based metrics, count the "unknown" labels or calc the labels frequencies, run the following Python script. 
      >$python example_based_metrics.py
 
-## References
+## Reference
 
 	@article{Kubany2019SemanticClassification, 
 	title = {{Semantic Comparison of State-of-the-Art Deep Learning Methods for Image Multi-Label Classification}}, 
