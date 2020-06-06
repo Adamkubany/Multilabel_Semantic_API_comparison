@@ -1,0 +1,17 @@
+,API,images,image labels,total inside labels,unknowns,unknowns_percentage,labels_per_object
+0,1000new_img_4_clarifai,1000,5000,5000,24,0.5,1
+1,1000new_img_7_googlevision,974,4347,4347,435,10.0,1
+2,1000new_img_2_ibmwatson,999,2484,2484,19,0.8,1
+3,1000new_img_1_imagga,1000,4993,4993,280,5.6,1
+4,1000new_img_5_microsoft_oxford,992,4445,4445,47,1.1,1
+5,1000new_img_6_wolfram,1000,5000,5000,2115,42.3,1.00
+6,1000new_img_9_deepdetect,1000,4996,9738,519,10.4,1.95
+7,1000new_img_12_InceptionResNetV2,1000,5000,9916,597,11.9,1.98
+8,1000new_img_11_tensorflow,998,4990,9806,604,12.1,1.97
+9,1000new_img_13_mobilenet_v2,1000,5000,9870,568,11.4,1.97
+10,1000new_img_17_resnet_imgnet,1000,5000,9973,514,10.3,1.99
+11,1000new_img_15_resnet_coco,997,4731,4731,248,5.2,1.00
+12,1000new_img_18_vgg19,1000,5000,10007,478,9.6,2.00
+13,1000new_img_14_yolo_v3,1000,5000,5000,979,19.6,1.00
+14,1000new_img_16_yolo_v3_coco,997,4334,4334,240,5.5,1.00
+15,1000new_img_objects_dist,1000,14136,14138,1215,8.6,1.00

@@ -1,9 +1,69 @@
 import os
+SAVE_FILE_FLAG = True
+# DATASET = 'OPEN_IMAGE'
+# DATASET = 'VISUAL_GENOME'
+SQL_DB_NAME = {'OPEN_IMAGE': 'sem_open_images',
+               'VISUAL_GENOME': 'sem_visual_genome',
+               'BACKUP': 'infomedia'}
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-SAVE_PATH = os.path.join(PROJECT_ROOT, 'results')
-W2VEC_FILE_PATH = os.path.join(PROJECT_ROOT, 'WordEmbedding')
+DATASETS_PATH = os.path.join(PROJECT_ROOT, 'datasets')
 
+# W2VEC_FILE_PATH = os.path.join(PROJECT_ROOT, 'WordEmbedding')
+W2VEC_FILE_PATH = r'C:\Users\Adam\Google Drive\!PhD\Sources\WordEmbeddings'
+PRETRAINED_MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(PROJECT_ROOT))), 'Sources', 'pretrained_models')
+# MODEL_PATH = os.path.join(PROJECT_ROOT, 'Sources', 'pretrained_models')
+
+DATASET_PATHS = {
+    'OPEN_IMAGE': {
+        'DATA_PATH': os.path.join(DATASETS_PATH, 'OpenImage', 'data'),
+        'IMAGES_PATH': os.path.join(DATASETS_PATH, 'OpenImage', 'first1000images'),
+        'IMAGES_DATA_FILE': os.path.join(DATASETS_PATH, 'OpenImage', 'data', '1000new_img_data.csv'),
+        'ORIGINAL_METADATA_PATH': os.path.join(DATASETS_PATH, 'OpenImage', 'metadata'),
+        'METRICS_RESULTS_PATH': os.path.join(DATASETS_PATH, 'OpenImage', 'results')},
+    'VISUAL_GENOME': {
+        'DATA_PATH': os.path.join(DATASETS_PATH, 'VisualGenome', 'data'),
+        'IMAGES_PATH': os.path.join(DATASETS_PATH, 'VisualGenome', 'first1000images'),
+        'IMAGES_DATA_FILE': os.path.join(DATASETS_PATH, 'VisualGenome', 'data', '1000new_img_data.csv'),
+        'ORIGINAL_METADATA_PATH': os.path.join(DATASETS_PATH, 'VisualGenome', 'metadata'),
+        'METRICS_RESULTS_PATH': os.path.join(DATASETS_PATH, 'VisualGenome', 'results')}
+    }
+
+AUTH = {'imagga': {'api_key': 'acc_9b11d34e9ffa3b7',
+                   'api_secret': '1de5ce7a81e5f3339ec496cd93e1bdb0'},
+        'ibmwatson': {"apikey": "n40ifI9xFSOgN_PA0qSKZ2bkF9w1Hc8d3K7mPNPC4h2D",
+                      "iam_apikey_description": "Auto-generated for key d30a2a90-430f-4e6e-b0d7-11f60e5f9ba6",
+                      "iam_apikey_name": "Auto-generated service credentials",
+                      "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                      "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/63405b367ec3526ea53ac761cf7a8607::serviceid:ServiceId-8b163fc6-5ea4-4bab-b434-a51a3be3bf4f",
+                      "url": "https://api.us-south.visual-recognition.watson.cloud.ibm.com/instances/83082b3c-8cfb-450f-ba99-d092e7e9baa6"},
+        'clarifai': {'model_id': 'aaa03c23b3724a16a56b629203edc62c',
+                     'authorization': 'Key f64747c85548403e890640deef0e75d5'},
+        'microsoft_oxford': {'endpoint': 'https://labels.cognitiveservices.azure.com/',
+                             'subscription_key': 'aceff8385f2b46e68003249ffd03fd8c'},
+        'googlevision': {'config_json': 'labels-318cbda2007a.json'}
+        }
+top_labels = 5
+
+api_numbers = {'clarifai': '4',
+               'googlevision': '7',
+               'ibmwatson': '2',
+               'imagga': '1',
+               'microsoft_oxford': '5',
+               'wolfram': '6',
+               'caffe': '8',
+               'deepdetect': '9',
+               'InceptionResNetV2': '12',
+               'tensorflow': '11',
+               'Inception-v3': '11',
+               'mobilenet_v2': '13',
+               'overfeat': '10',
+                'resnet_imgnet': '17',
+               'resnet_coco': '15',
+               'vgg19': '18',
+               'yolo_v3_imagenet': '14',
+               'yolo_v3_coco': '16'
+               }
 imagenet_classes = {0: 'tench, Tinca tinca',
                     1: 'goldfish, Carassius auratus',
                     2: 'great white shark, white shark, man-eater, man-eating shark, Carcharodon carcharias',
