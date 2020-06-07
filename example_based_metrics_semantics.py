@@ -416,77 +416,6 @@ def label_freq(save_fig=True, rng=100, verbose=False):
     return api_labels_freq, api_labels_distinct
 
 
-def count_unknowns():
-    """
-    Count the "unknown" labels per API
-    :return: save CSV file with results
-    """
-    # APIs = ['1000new_img_objects_dist']
-    img_gt_table = '1000new_img_objects_dist'
-    apis = APIs.copy()
-    apis.append(img_gt_table)
-
-    print_count = 1
-    embd_choice = 1
-    embedding = ['glove', 'w2v']
-
-    embedding = embedding[embd_choice]
-
-    if embedding == 'w2v':
-        get_embd = get_w2v_embd
-    elif embedding == 'glove':
-        get_embd = get_glove_embd
-    # Main
-    print('using "{}" embeddings'.format(embedding))
-
-    unknown_vec = get_embd('unknown').reshape(1, -1)
-    df = pd.DataFrame(columns=['API', 'images', 'image labels', 'total inside labels', 'unknowns', 'unknowns_percentage', 'labels_per_object'])
-
-    images = pd.read_csv(os.path.join(DATA_PATH, '1000new_images.csv')).values
-
-    for api in apis:
-        api_df = pd.read_csv(os.path.join(DATA_PATH, api + '.csv'))
-        ground_truth = False
-        top_labels = 5
-        if api == '1000new_img_objects_dist':
-            top_labels = None
-            ground_truth = True
-        img_counter = 0
-        label_counter = 0
-        unknown_counter = 0
-        total_label_counter = 0
-        for img in images:
-            img_id = img[0]
-            # if img_counter ==2:
-            #     break
-            # img_id = 43
-            if img_counter % print_count == 0:
-                print('image id {} # {} / {} api {} top {}'.format(img_id, img_counter, len(images), api, top_labels))
-            pred_labels, _ = get_img_lables(img_id, api_df, top_labels, ground_truth=ground_truth)
-            if pred_labels:  # in case no such img for api
-                img_counter += 1
-                label_counter += len(pred_labels)
-                for pred_label_ in pred_labels:
-                    total_label_counter += len(pred_label_)
-                    label_ok = False
-                    for label in pred_label_:  # multiple labels per object
-                        label_vec = get_embd(label).reshape(1, -1)
-                        if not np.array_equal(label_vec, unknown_vec):
-                            # print('label "{}" is OK'.format(label))
-                            label_ok = True
-                            break
-
-                        else:
-                            print('the label "{}" is unknown in {} embeddings, count is {}/{}.'.format(label, embedding, unknown_counter, label_counter))
-
-                    if not label_ok:
-                        unknown_counter += 1
-        unknowns_percentage = 100 * unknown_counter / label_counter
-        df = df.append({'API': api, 'images': img_counter, 'image labels': label_counter, 'total inside labels': total_label_counter, 'unknowns': unknown_counter, 'unknowns_percentage': unknowns_percentage, 'labels_per_object': total_label_counter/label_counter}, ignore_index=True)
-    df.to_csv(os.path.join(METRICS_RESULTS_PATH, 'unknown-labels_with_total_{}.csv'.format(DATASET)))
-
-
-
 def api_example_based_metrics():
     """
     Calc the example-based and semantic metrics
@@ -646,8 +575,7 @@ def main():
             print(50 * '-')
     correct_input = False
     choice_dict = {"1": "to calc example-based and semantic metrics",
-                   "2": "to count the unknown labels",
-                   "3": "to calc the labels frequencies"}
+                   "2": "to calc the labels frequencies"}
     while not correct_input:
         print("Examining the inference results for the '{}' dataset. Choose from the following options:".format(DATASET))
         for key in choice_dict:
@@ -676,8 +604,6 @@ def main():
                 roberta_model = RobertaModel.from_pretrained('roberta-base')
                 api_example_based_metrics()
             elif choice == "2":
-                count_unknowns()
-            elif choice == "3":
                 label_freq(rng=100)
             correct_input = True
         else:
