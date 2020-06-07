@@ -18,7 +18,7 @@ The ETL procedure for the 'Visual Genome' and 'Open Images' benchmark datasets.
 Download the dataset's metadata to the appropriate folder (\datasets\\[DATASET]\metadata). The [objects.json](https://visualgenome.org/static/data/dataset/objects_v1.json.zip) file for the Visual Genome dataset, and the [train-annotations-human-imagelabels-boxable.csv](https://storage.googleapis.com/openimages/v5/train-annotations-human-imagelabels-boxable.csv) and the [train-images-boxable-with-rotation.csv](https://storage.googleapis.com/openimages/2018_04/train/train-images-boxable-with-rotation.csv) for the Open Images dataset.
 #### Run command:
      $python etl.py
-The ETL results are saved in the  `\datasets\\[DATASET]\data` folder. 
+The ETL results are saved in the  `\datasets\[DATASET]\data` folder. 
 
 ## Multi-labels classification inference
 Inference scripts for the paper applied commercial and open-source APIs.
@@ -38,7 +38,7 @@ The inference script for the following  commercial APIs:
 #### Run command:
      $python labels_inference_commercial.py
 Please note that the commercial APIs often change their interface...
-The inference results are saved in the  `\datasets\\[DATASET]\data` folder. 
+The inference results are saved in the  `\datasets\[DATASET]\data` folder. 
 
 
 ### Open-source APIs
@@ -61,7 +61,7 @@ The inference script for the following open-source APIs:
 
 #### Run command:
      $python labels_inference_open_source.py
-The inference results are saved in the  `\datasets\\[DATASET]\data` folder. 
+The inference results are saved in the  `\datasets\[DATASET]\data` folder. 
 
 ## Evaluation metrics
 Example-based, label-based, and the proposed semantic evaluation metrics.
@@ -77,7 +77,7 @@ Semantic metrics: semantic accuracy, semantic recall, semantic precision, semant
 
 #### Run command:
      $python example_based_metrics_semantics.py
-The metrics results are saved in the  `\datasets\\[DATASET]\results` folder. 
+The metrics results are saved in the  `\datasets\[DATASET]\results` folder. 
 
 ### Label based metircs
 Label-based metrics: micro and macro averaging of precision, recall, and F1
@@ -86,7 +86,7 @@ Label-based metrics: micro and macro averaging of precision, recall, and F1
 2. Create the `sem_open_images` and `sem_visual_genome` MySQL databases and import the DB tables using the `.sql` file in the `\datasets\\[DATASET]\data` folder.
 #### Run command:
      $php label_based_metrics.php "OPEN_IMAGE" (or "VISUAL_GENOME")
-The metrics results are saved in the  `\datasets\\[DATASET]\results` folder. 
+The metrics results are saved in the  `\datasets\[DATASET]\results` folder. 
 
 
 For questions and remarks please contact [Adam Kubany](https://github.com/Adamkubany/Multilabel_Semantic_API_comparison/blob/master/adamku@post.bg.ac.il).
