@@ -1,5 +1,5 @@
 
-import mysql.connector
+# import mysql.connector
 
 import re
 from sklearn.feature_extraction.text import CountVectorizer
@@ -19,42 +19,29 @@ import matplotlib.pyplot as plt
 
 from sentence_transformers import SentenceTransformer
 import torch
-from transformers import XLNetModel, XLNetTokenizer, BertModel, BertTokenizer, RobertaModel,RobertaTokenizer
+from transformers import XLNetModel, XLNetTokenizer, BertModel, BertTokenizer, RobertaModel, RobertaTokenizer
 
-from config import SAVE_PATH, W2VEC_FILE_PATH
+from config import W2VEC_FILE_PATH, DATASET_PATHS, SQL_DB_NAME
 
+global w2v_model, DATASET, METRICS_RESULTS_PATH, con, DATA_PATH
+global bert_finetune_model, roberta_finetune_model, xlnet_tokenizer, xlnet_model, bert_tokenizer, bert_model, roberta_tokenizer, roberta_model
 
-# init NLP models
-bert_finetune_model = SentenceTransformer('bert-base-nli-stsb-wkpooling')
-roberta_finetune_model = SentenceTransformer('roberta-base-nli-stsb-mean-tokens')
-
-xlnet_tokenizer = XLNetTokenizer.from_pretrained('xlnet-base-cased')
-xlnet_model = XLNetModel.from_pretrained('xlnet-base-cased')
-
-bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-bert_model = BertModel.from_pretrained('bert-base-uncased')
-
-roberta_tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
-roberta_model = RobertaModel.from_pretrained('roberta-base')
 
 # init params
 w2v_file_path_local = os.path.join(W2VEC_FILE_PATH, 'GoogleNews-vectors-negative300.bin')
-global w2v_model
 stop_words = set(stopwords.words('english'))
-con = mysql.connector.connect(user='root', password='', host='localhost', database='infomedia')
 
-APIs = ['1000new_img_4_clarifai',
+APIs = [
+        '1000new_img_4_clarifai',
         '1000new_img_7_googlevision',
         '1000new_img_2_ibmwatson',
         '1000new_img_1_imagga',
         '1000new_img_5_microsoft_oxford',
         '1000new_img_6_wolfram',
-        '1000new_img_8_caffe',
         '1000new_img_9_deepdetect',
         '1000new_img_12_InceptionResNetV2',
         '1000new_img_11_tensorflow',
         '1000new_img_13_mobilenet_v2',
-        '1000new_img_10_overfeat',
         '1000new_img_17_resnet_imgnet',
         '1000new_img_15_resnet_coco',
         '1000new_img_18_vgg19',
@@ -67,9 +54,7 @@ api_names = {'1000new_img_1_imagga': 'Imagga',
              '1000new_img_5_microsoft_oxford': 'Microsoft Computer Vision',
              '1000new_img_6_wolfram': 'Wolfram',
              '1000new_img_7_googlevision': 'Google Cloud Vision',
-             '1000new_img_8_caffe': 'CaffeNet',
              '1000new_img_9_deepdetect': 'DeepDetect',
-             '1000new_img_10_overfeat': 'Overfeat',
              '1000new_img_11_tensorflow': 'Inception-v3',
              '1000new_img_12_InceptionResNetV2': 'InceptionResNet-v2',
              '1000new_img_13_mobilenet_v2': 'MobileNet-v2',
@@ -178,38 +163,43 @@ def clean_label(label):
     return label
 
 
-def get_img_lables(imgid, ap, top_lbls=None, clean_unknowns=False):
+def get_img_lables(imgid, df, top_lbls=None, clean_unknowns=False, ground_truth=False):
     """
     Retrieve image labels
 
+    :param ground_truth:
     :param imgid:
     :param ap: api
     :param top_lbls:
     :param clean_unknowns:
     :return: label list
     """
+
     if clean_unknowns:
         unknown_vec = get_w2v_embd('unknown').reshape(1, -1)
-    cursor = con.cursor(buffered=True)
+    # cursor = con.cursor(buffered=True)
+    # image_labels = ''
+    label_col = 'label'
+    if ground_truth:
+        label_col = 'names'
     if top_lbls is None:
-        top_lbls = ""
+        image_labels = df.loc[df.img_id == imgid][label_col]
+        # top_lbls = ""
     else:
-        top_lbls = "order by conf_level DESC limit 0 ," + str(top_lbls)
-    cursor.execute("select * from {api_name} where img_id={image_id} {tp}"
-                   .format(api_name=ap, image_id=imgid, tp=top_lbls))
-    rows = cursor.fetchall()
+        image_labels = df.loc[df.img_id == imgid].nlargest(top_lbls, 'conf_level')[label_col]
+
     label_list = []
     label_string = ''
     row_count = -1
-    for row in rows:
+    for row in image_labels:
         row_count += 1
         label_list.append([])
-        for word in row[1].split(','):  # split in case 2 labels in one cell sep by ,
+        for word in row.split(','):  # split in case 2 labels in one cell sep by ,
             w = clean_label(word)
             if not clean_unknowns or (clean_unknowns and not np.array_equal(unknown_vec, get_w2v_embd(w).reshape(1, -1))):
                 label_list[row_count].append(w)
                 label_string += " " + w
-    cursor.close()
+    # cursor.close()
     return label_list, label_string.strip()
 
 
@@ -310,12 +300,15 @@ def average_precision(predictions, gts_, embedding='', th=0.3):
         cur_precision = 0
         # label_preds_ = label_preds.split(', ')
         for label_pred in label_preds_:
+            label_pred_embd = get_embd(label_pred).reshape(1, -1)
             gt_place = -1
             for label_gt_ in gts:
                 gt_place += 1
                 for label_gt in label_gt_:
+                    label_gt_embd = get_embd(label_gt).reshape(1, -1)
                     if embedding:
-                        if cosine_similarity(get_embd(label_gt).reshape(1, -1), get_embd(label_pred).reshape(1, -1))[0][0] > th:
+                        # if cosine_similarity(get_embd(label_gt).reshape(1, -1), get_embd(label_pred).reshape(1, -1))[0][0] > th:
+                        if cosine_similarity(label_pred_embd, label_gt_embd)[0][0] > th:
                             same = True
                             gts.pop(gt_place)
                             break
@@ -362,7 +355,7 @@ def metrics(tp, pred_len, gt_len, labels_num):
     return recall, precision, f1, accuracy, accuracy_balanced
 
 
-def label_freq(save_fig=True, rng=200, verbose=False):
+def label_freq(save_fig=True, rng=100, verbose=False):
     """
     Calc the label frequency for each API
     :param save_fig:
@@ -376,16 +369,18 @@ def label_freq(save_fig=True, rng=200, verbose=False):
     img_gt_table = '1000new_img_objects_dist'
     apis.append(img_gt_table)
 
-    cursor_imgs = con.cursor(buffered=True)
-    cursor_imgs.execute("select * from 1000new_images")
-    images = cursor_imgs.fetchall()
+    images = pd.read_csv(os.path.join(DATA_PATH, '1000new_images.csv')).values
+
     api_labels_freq, api_labels_distinct, api_labels = {}, {}, {}
     print_count = 50
     for api in apis:
+        api_df = pd.read_csv(os.path.join(DATA_PATH, api + '.csv'))
+        ground_truth = False
+        top_labels = 5
         if api == '1000new_img_objects_dist':
             top_labels = None
-        else:
-            top_labels = 5
+            ground_truth = True
+
         img_counter = 0
         labels = []
         for img in images:
@@ -393,7 +388,7 @@ def label_freq(save_fig=True, rng=200, verbose=False):
             img_id = img[0]
             if img_counter % print_count == 0:
                 print('image id {} # {} / {} api {} top {}'.format(img_id, img_counter, len(images), api, top_labels))
-            pred_labels, _ = get_img_lables(img_id, api, top_labels)
+            pred_labels, _ = get_img_lables(img_id, api_df, top_labels, ground_truth=ground_truth)
             for label in pred_labels:
                 labels = labels + label  # for multi label per object
         api_labels_freq[api] = sorted(list(Counter(labels).values()), reverse=True)
@@ -403,20 +398,21 @@ def label_freq(save_fig=True, rng=200, verbose=False):
         for api in apis:
             print("Api {} have {} / {} unique labels".format(api, len(api_labels_distinct[api]), len(api_labels[api])))
 
-    # rng = 200
     if save_fig:
-        x = [i for i in range(rng)]
+        x = list(range(rng))
         fig = plt.figure(figsize=(10, 6))
         ax = fig.add_subplot(1, 1, 1)
+        legend = []
         for api in apis:
             if api in ['1000new_img_15_resnet_coco', '1000new_img_16_yolo_v3_coco']:
                 continue
+            legend.append(api_names[api])
             y = api_labels_freq[api][:rng] + [0] * (rng - len(api_labels_freq[api][:rng]))
             ax.plot(x, y, label=api_labels_freq[api])
         ax.set_ylabel("Frequency")
         # ax.set_title("{} Most Frequent Labels".format(rng))
-        ax.legend()
-        fig.savefig(os.path.join(SAVE_PATH, 'label_freq.jpg'), format='jpg', quality=100, dpi=1000, bbox_inches='tight')
+        ax.legend(legend)
+        fig.savefig(os.path.join(METRICS_RESULTS_PATH, 'label_freq_{}.jpg'.format(DATASET)), format='jpg', quality=100, dpi=1000, bbox_inches='tight')
     return api_labels_freq, api_labels_distinct
 
 
@@ -444,16 +440,17 @@ def count_unknowns():
     print('using "{}" embeddings'.format(embedding))
 
     unknown_vec = get_embd('unknown').reshape(1, -1)
-    df = pd.DataFrame(columns=['API', 'images', 'label_number', 'total labels', 'unknowns'])
-    cursor_imgs = con.cursor(buffered=True)
-    cursor_imgs.execute("select * from 1000new_images")
-    images = cursor_imgs.fetchall()
+    df = pd.DataFrame(columns=['API', 'images', 'image labels', 'total inside labels', 'unknowns', 'unknowns_percentage', 'labels_per_object'])
+
+    images = pd.read_csv(os.path.join(DATA_PATH, '1000new_images.csv')).values
 
     for api in apis:
+        api_df = pd.read_csv(os.path.join(DATA_PATH, api + '.csv'))
+        ground_truth = False
+        top_labels = 5
         if api == '1000new_img_objects_dist':
             top_labels = None
-        else:
-            top_labels = 5
+            ground_truth = True
         img_counter = 0
         label_counter = 0
         unknown_counter = 0
@@ -465,14 +462,14 @@ def count_unknowns():
             # img_id = 43
             if img_counter % print_count == 0:
                 print('image id {} # {} / {} api {} top {}'.format(img_id, img_counter, len(images), api, top_labels))
-            pred_labels, _ = get_img_lables(img_id, api, top_labels)
+            pred_labels, _ = get_img_lables(img_id, api_df, top_labels, ground_truth=ground_truth)
             if pred_labels:  # in case no such img for api
                 img_counter += 1
                 label_counter += len(pred_labels)
                 for pred_label_ in pred_labels:
                     total_label_counter += len(pred_label_)
                     label_ok = False
-                    for label in pred_label_:
+                    for label in pred_label_:  # multiple labels per object
                         label_vec = get_embd(label).reshape(1, -1)
                         if not np.array_equal(label_vec, unknown_vec):
                             # print('label "{}" is OK'.format(label))
@@ -484,11 +481,10 @@ def count_unknowns():
 
                     if not label_ok:
                         unknown_counter += 1
-        df = df.append({'API': api, 'images': img_counter, 'label_number': label_counter, 'total labels': total_label_counter, 'unknowns': unknown_counter}, ignore_index=True)
-    df.to_csv(os.path.join(SAVE_PATH, 'unknown-labels_with_total.csv'))
-    cursor_imgs.close()
+        unknowns_percentage = 100 * unknown_counter / label_counter
+        df = df.append({'API': api, 'images': img_counter, 'image labels': label_counter, 'total inside labels': total_label_counter, 'unknowns': unknown_counter, 'unknowns_percentage': unknowns_percentage, 'labels_per_object': total_label_counter/label_counter}, ignore_index=True)
+    df.to_csv(os.path.join(METRICS_RESULTS_PATH, 'unknown-labels_with_total_{}.csv'.format(DATASET)))
 
-    con.close()
 
 
 def api_example_based_metrics():
@@ -497,38 +493,42 @@ def api_example_based_metrics():
     :return: save CSV with results to disk
     """
     top_predictions_options = [5, 3, 1]
-    # APIs = ['1000new_img_6_wolfram']
+    # APIs = ['1000new_img_4_clarifai']
     # top_predictions_options = [1]
-    img_gt_table = '1000new_img_objects_dist'
+
+    img_gt_table = pd.read_csv(os.path.join(DATA_PATH, '1000new_img_objects_dist.csv'))
 
     similarity_th = 0.4
     print_count = 1
     embd_choice = 1
     embedding = ['glove', 'w2v']
-    labels_count = 3728
+    dataset_label_count = {'OPEN_IMAGE': 263,
+                           'VISUAL_GENOME': 3728}
+    labels_count = dataset_label_count[DATASET]
 
     # Main
     embedding = embedding[embd_choice]
     print('using "{}" embeddings'.format(embedding))
 
-    all_file = open(os.path.join(SAVE_PATH, 'example_based_and_semantic_metrics.csv'), 'w')
+    all_file = open(os.path.join(METRICS_RESULTS_PATH, 'example_based_and_semantic_metrics_{}.csv'.format(DATASET)), 'w')
     all_write = csv.writer(all_file)
     all_write.writerow(['api', 'labels', 'top_labels', 'imgs_in_api', 'api_recall', 'api_recall_semantic', 'api_precision', 'api_precision_semantic',
                         'api_f1', 'api_f1_semantic', 'api_ap', 'api_ap_sem', 'img_acc', 'img_acc_semantic', 'img_acc_bl', 'img_acc_bl_semantic',
                         'api_wmd', 'api_bert_fine', 'api_bert', 'api_roberta_fine', 'api_roberta', 'api_xlnet'])
 
-    cursor_imgs = con.cursor(buffered=True)
-    cursor_imgs.execute("select * from 1000new_images")
-    images = cursor_imgs.fetchall()
+    images = pd.read_csv(os.path.join(DATA_PATH, '1000new_images.csv')).values
+
     api_counter = 0
     for api in APIs:
         api_counter += 1
+        api_df = pd.read_csv(os.path.join(DATA_PATH, api + '.csv'))
+
         for top_labels in top_predictions_options:
             print("API: " + api + " top labels: " + str(top_labels))
             counter = 0
             imgs_in_api = 0
             api_wmd, api_wmd_clean, api_ap, api_ap_sem, api_recall, api_recall_semantic, api_precision, api_precision_semantic, api_f1, api_f1_semantic, api_acc, api_acc_semantic, api_acc_bl, api_acc_bl_semantic, api_bert_fine, api_roberta_fine, api_bert, api_roberta, api_xlnet = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            # api_file = open(os.path.join(SAVE_PATH, 'similarity_{}_top_{}.csv'.format(api, str(top_labels))), 'w')
+            # api_file = open(os.path.join(METRICS_RESULTS_PATH, 'similarity_{}_top_{}_{}.csv'.format(api, str(top_labels), DATASET)), 'w')
             # api_write = csv.writer(api_file)
             # api_write.writerow(['img_id', 'tp', 'tp_sem', 'pred_count', 'gt_count', 'img_recall', 'img_recall_semantic', 'img_precision', 'img_precision_semantic', 'img_f1', 'img_f1_semantic',
             #                     'img_ap', 'img_ap_semantic', 'img_acc', 'img_acc_semantic', 'img_acc_bl', 'img_acc_bl_semantic', 'img_wmd', 'img_bert_fine', 'img_bert', 'img_roberta_fine', 'img_roberta', 'img_xlnet'])
@@ -536,11 +536,10 @@ def api_example_based_metrics():
             for img in images:
                 counter += 1
                 img_id = img[0]
-                # img_id = 285633
                 if counter % print_count == 0:
                     print('image id {} # {}/{} api {} # {}/{}. top {}'.format(img_id, counter, len(images), api, api_counter, len(APIs), top_labels))
-                gt_labels, gt_string = get_img_lables(img_id, img_gt_table)
-                pred_labels, pred_string = get_img_lables(img_id, api, top_labels)
+                gt_labels, gt_string = get_img_lables(img_id, img_gt_table, ground_truth=True)
+                pred_labels, pred_string = get_img_lables(img_id, api_df, top_labels)
 
                 if len([l[0] for l in pred_labels if len(l) != 0]) != 0:  # in case no such img for api
                     imgs_in_api += 1
@@ -622,36 +621,68 @@ def api_example_based_metrics():
             all_file.flush()
     print("Done!")
     all_file.close()
-    cursor_imgs.close()
-    con.close()
 
 
 def main():
-    global w2v_model
+    global w2v_model, DATASET, METRICS_RESULTS_PATH, con, DATA_PATH
+    global bert_finetune_model, roberta_finetune_model, xlnet_tokenizer, xlnet_model, bert_tokenizer, bert_model, roberta_tokenizer, roberta_model
 
+    correct_db = False
+    db_dict =  {'0': 'OPEN_IMAGE',
+                '1': 'VISUAL_GENOME'}
+    while not correct_db:
+        print('Please choose dataset to evaluate:')
+        for db in db_dict.keys():
+            print('For {} dataset, choose {}'.format(db_dict[db], db))
+        db_choice = input("Your choice: ")
+        if db_choice in db_dict.keys():
+            correct_db = True
+            DATASET = db_dict[db_choice]
+            METRICS_RESULTS_PATH = DATASET_PATHS[DATASET]['METRICS_RESULTS_PATH']
+            DATA_PATH = DATASET_PATHS[DATASET]['DATA_PATH']
+            # con = mysql.connector.connect(user='root', password='', host='localhost', database=SQL_DB_NAME[DATASET])
+        else:
+            print('ERROR: "{}" is a wrong input, please try again...'.format(db_choice))
+            print(50 * '-')
     correct_input = False
-    choice_dict = {"1": "to calc example-based and semantic metrics", "2": "to count the unknown labels", "3": "to calc the labels frequencies"}
+    choice_dict = {"1": "to calc example-based and semantic metrics",
+                   "2": "to count the unknown labels",
+                   "3": "to calc the labels frequencies"}
     while not correct_input:
-        print("Choose from the following options:")
+        print("Examining the inference results for the '{}' dataset. Choose from the following options:".format(DATASET))
         for key in choice_dict:
             print('Type {} {}.'.format(key, choice_dict[key]))
 
         choice = input("Your choice: ")
         if choice in ["1", "2", "3"]:
             print("You chose {}.".format(choice_dict[choice]))
-            print("Please wait while loading the word2vec model...")
-            w2v_model = gensim.models.KeyedVectors.load_word2vec_format(w2v_file_path_local, binary=True)
-            print("Done loading the word2vec model...")
+            if choice in ['1', '2']:
+                print("Please wait while loading the word2vec model...")
+                w2v_model = gensim.models.KeyedVectors.load_word2vec_format(w2v_file_path_local, binary=True)
+                print("Done loading the word2vec model...")
             if choice == "1":
+                # init NLP models
+                print('Loading NLP models...')
+                bert_finetune_model = SentenceTransformer('bert-base-nli-stsb-wkpooling')
+                roberta_finetune_model = SentenceTransformer('roberta-base-nli-stsb-mean-tokens')
+
+                xlnet_tokenizer = XLNetTokenizer.from_pretrained('xlnet-base-cased')
+                xlnet_model = XLNetModel.from_pretrained('xlnet-base-cased')
+
+                bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+                bert_model = BertModel.from_pretrained('bert-base-uncased')
+
+                roberta_tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
+                roberta_model = RobertaModel.from_pretrained('roberta-base')
                 api_example_based_metrics()
             elif choice == "2":
                 count_unknowns()
             elif choice == "3":
-                label_freq()
+                label_freq(rng=100)
             correct_input = True
         else:
             print('ERROR: "{}" is a wrong input, try again...'.format(choice))
-            print('---------------')
+            print(20 * '-')
 
 
 if __name__ == '__main__':

@@ -63,11 +63,11 @@ function setObjVec($ObjArry, $real) {
     //for all the objects in the image
     foreach ($ObjArry as $v1) {
         // $toCheck = 1;
-        $noSpaceV1 = str_replace(' ', '', $v1);
+        $noSpaceV1 = strtolower(str_replace(' ', '', $v1));
         //for all the objects
         $counterObj = 0;
         foreach ($allObjects as $k2 => $v2) {
-            $noSpaceV2 = str_replace(' ', '', $v2);
+            $noSpaceV2 = strtolower(str_replace(' ', '', $v2));
             if ($real) {
                 $nameEqual = ($noSpaceV1 == $noSpaceV2) ? 1 : 0;
                 if ($nameEqual) {
@@ -101,19 +101,38 @@ function setObjVec($ObjArry, $real) {
 
 <?php
 set_time_limit(864000);
-$con = mysqli_connect("localhost", "root", "", "infomedia");
-$APIs = ['1000new_img_1_imagga', '1000new_img_2_ibmwatson', '1000new_img_4_clarifai',
-    '1000new_img_5_microsoft_oxford', '1000new_img_6_wolfram', '1000new_img_7_googlevision', '1000new_img_8_caffe',
-    '1000new_img_9_deepdetect', '1000new_img_10_overfeat', '1000new_img_11_tensorflow','1000new_img_12_InceptionResNetV2',
-    '1000new_img_13_mobilenet_v2', '1000new_img_14_yolo_v3', '1000new_img_15_resnet_coco', '1000new_img_16_yolo_v3_coco',
-    '1000new_img_17_resnet_imgnet', '1000new_img_18_vgg19'];
-//  $APIs = ['1000new_img_18_vgg19'];
+$dataset_name = $argv[1];
+//$dataset_name = 'VISUAL_GENOME';
+$sql_db_name = ($dataset_name == 'OPEN_IMAGE') ? "sem_open_images" : "sem_visual_genome";
+$dataset_folder = ($dataset_name == 'OPEN_IMAGE') ? "OpenImage" : "VisualGenome";
+echo "DATASET: $dataset_name, SQL DB NAME: $sql_db_name. \n";
+
+$con = mysqli_connect("localhost", "root", "", $sql_db_name);
+$APIs = ['1000new_img_4_clarifai',
+        '1000new_img_7_googlevision',
+        '1000new_img_2_ibmwatson',
+        '1000new_img_1_imagga',
+        '1000new_img_5_microsoft_oxford',
+        '1000new_img_6_wolfram',
+        # '1000new_img_8_caffe',
+        '1000new_img_9_deepdetect',
+        '1000new_img_12_InceptionResNetV2',
+        '1000new_img_11_tensorflow',
+        '1000new_img_13_mobilenet_v2',
+        # '1000new_img_10_overfeat',
+        '1000new_img_17_resnet_imgnet',
+        '1000new_img_15_resnet_coco',
+        '1000new_img_18_vgg19',
+        '1000new_img_14_yolo_v3',
+        '1000new_img_16_yolo_v3_coco'];
+
+//$APIs = ['1000new_img_4_clarifai'];
 $topPredOptions = [5, 3, 1];
 //        $topPredOptions = [1];
 $imagesTable = '1000new_images';
 $imgObjDistTable = '1000new_img_objects_dist';
-$allObjectsTable = '1000new_img_allobj';
-$save_path = dirname(__DIR__) . '\code\results';
+//$allObjectsTable = '1000new_img_allobj';
+$save_path = dirname(__DIR__) . '/code/datasets/'.$dataset_folder.'\results';
 $save_path = str_replace("\\", '/', $save_path);
 
 $writeToFile = 1;
@@ -170,7 +189,7 @@ foreach ($topPredOptions as $topValue) {//for all the different top predictions
             $cur_img_id = $row['img_id'];
 
             //preparing the real objects for image
-            $cur_img_real_objs = mysqli_query($con, "select * from $imgObjDistTable where img_id=$cur_img_id");
+            $cur_img_real_objs = mysqli_query($con, "select * from $imgObjDistTable where img_id='$cur_img_id'");
             while ($row1 = mysqli_fetch_array($cur_img_real_objs)) {
                 $cur_names = $row1['names'];
                 //dealing with images without objects in the ground truth
@@ -180,7 +199,7 @@ foreach ($topPredOptions as $topValue) {//for all the different top predictions
                 $realImgObj[] = $cur_names;
             }
             //preparing the predicted objects for image
-            $cur_img_pred_objs = mysqli_query($con, "select * from $apiObjTable where img_id=$cur_img_id order by conf_level DESC limit 0 ,$topPredObj");
+            $cur_img_pred_objs = mysqli_query($con, "select * from $apiObjTable where img_id='$cur_img_id' order by conf_level DESC limit 0 ,$topPredObj");
             while ($row2 = mysqli_fetch_array($cur_img_pred_objs)) {
                 $cur_pred_names = $row2['label'];
                 //dealing with images without objects in the ground truth
@@ -243,7 +262,7 @@ foreach ($topPredOptions as $topValue) {//for all the different top predictions
 
         ($writeToFile) ? fputcsv($fpAllMeas, array_merge([$apiObjTable, $topPredObj, $numOfImages, $numOfObjects],$measures)) : "";
 
- //       ($writeToFile) ? fclose($fpObjMeas) : "";
+//        ($writeToFile) ? fclose($fpObjMeas) : "";
 
         var_dump($numOfImages, $numOfObjects, $measures);
     }

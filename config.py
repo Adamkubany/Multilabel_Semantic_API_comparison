@@ -29,19 +29,19 @@ DATASET_PATHS = {
         'METRICS_RESULTS_PATH': os.path.join(DATASETS_PATH, 'VisualGenome', 'results')}
     }
 
-AUTH = {'imagga': {'api_key': 'acc_9b11d34e9ffa3b7',
-                   'api_secret': '1de5ce7a81e5f3339ec496cd93e1bdb0'},
-        'ibmwatson': {"apikey": "n40ifI9xFSOgN_PA0qSKZ2bkF9w1Hc8d3K7mPNPC4h2D",
-                      "iam_apikey_description": "Auto-generated for key d30a2a90-430f-4e6e-b0d7-11f60e5f9ba6",
+AUTH = {'imagga': {'api_key': '',
+                   'api_secret': ''},
+        'ibmwatson': {"apikey": "",
+                      "iam_apikey_description": "Auto-generated for key ",
                       "iam_apikey_name": "Auto-generated service credentials",
                       "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
-                      "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/63405b367ec3526ea53ac761cf7a8607::serviceid:ServiceId-8b163fc6-5ea4-4bab-b434-a51a3be3bf4f",
-                      "url": "https://api.us-south.visual-recognition.watson.cloud.ibm.com/instances/83082b3c-8cfb-450f-ba99-d092e7e9baa6"},
-        'clarifai': {'model_id': 'aaa03c23b3724a16a56b629203edc62c',
-                     'authorization': 'Key f64747c85548403e890640deef0e75d5'},
-        'microsoft_oxford': {'endpoint': 'https://labels.cognitiveservices.azure.com/',
-                             'subscription_key': 'aceff8385f2b46e68003249ffd03fd8c'},
-        'googlevision': {'config_json': 'labels-318cbda2007a.json'}
+                      "iam_serviceid_crn": "",
+                      "url": ""},
+        'clarifai': {'model_id': '',
+                     'authorization': 'Key '},
+        'microsoft_oxford': {'endpoint': '',
+                             'subscription_key': ''},
+        'googlevision': {'config_json': '.json'}
         }
 top_labels = 5
 
