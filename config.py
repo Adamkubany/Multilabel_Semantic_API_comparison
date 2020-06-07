@@ -1,4 +1,6 @@
 import os
+
+top_labels = 5
 SAVE_FILE_FLAG = True
 # DATASET = 'OPEN_IMAGE'
 # DATASET = 'VISUAL_GENOME'
@@ -9,10 +11,8 @@ SQL_DB_NAME = {'OPEN_IMAGE': 'sem_open_images',
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 DATASETS_PATH = os.path.join(PROJECT_ROOT, 'datasets')
 
-# W2VEC_FILE_PATH = os.path.join(PROJECT_ROOT, 'WordEmbedding')
-W2VEC_FILE_PATH = r'C:\Users\Adam\Google Drive\!PhD\Sources\WordEmbeddings'
-PRETRAINED_MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(PROJECT_ROOT))), 'Sources', 'pretrained_models')
-# MODEL_PATH = os.path.join(PROJECT_ROOT, 'Sources', 'pretrained_models')
+W2VEC_FILE_PATH = os.path.join(PROJECT_ROOT, 'sources')
+PRETRAINED_MODEL_PATH = os.path.join(PROJECT_ROOT, 'sources')
 
 DATASET_PATHS = {
     'OPEN_IMAGE': {
@@ -43,7 +43,6 @@ AUTH = {'imagga': {'api_key': '',
                              'subscription_key': ''},
         'googlevision': {'config_json': '.json'}
         }
-top_labels = 5
 
 api_numbers = {'clarifai': '4',
                'googlevision': '7',
