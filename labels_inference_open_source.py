@@ -237,6 +237,7 @@ def main():
                    "6": ['YOLO V3 (require linux)', 'ImageNet'],
                    "7": ['ResNet50', 'COCO'],
                    "8": ['YOLO V3', 'COCO'],
+                   "9": ['Deepdetect', 'ImageNet']
                    }
     while not correct_input:
         print("Open-source API inference for the '{}' dataset. Choose from the following options:".format(DATASET))
@@ -252,6 +253,8 @@ def main():
                 yolo_imagenet()
             elif choice in [7, 8]:
                 inference_coco(algo_choice=choice-7)
+            elif choice == 9:
+                inference_deepdetect()
             correct_input = True
         else:
             print('ERROR: "{}" is a wrong input, please try again...'.format(choice))
