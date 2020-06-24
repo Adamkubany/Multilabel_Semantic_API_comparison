@@ -68,7 +68,7 @@ Example-based, label-based, and the proposed semantic evaluation metrics.
 
 ### Example based and semantic metrics
 - Example-based metrics: accuracy, recall, precision, and F1
-- Semantic metrics: semantic accuracy, semantic recall, semantic precision, semantic F1, Word Moving Distance (WMD), fine-tune BERT, fine-tune RoBERTa
+- Semantic metrics: semantic accuracy, semantic recall, semantic precision, semantic F1, Word Moving Distance (WMD), fine-tuned BERT, fine-tuned RoBERTa
 #### Installation:
 1. Create a metrics calculation python conda environment using [`env_metrics_calc.yml`](https://github.com/Adamkubany/Multilabel_Semantic_API_comparison/blob/master/sources/env_metrics_calc.yml "env_metrics_calc.yml") file.
 2. Download the [word2vec pre-trained bin file](https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing) to the [`sources`](https://github.com/Adamkubany/Multilabel_Semantic_API_comparison/tree/master/sources "sources") folder.
@@ -89,4 +89,4 @@ Label-based metrics: micro and macro averaging of precision, recall, and F1
 The metrics results are saved in the  `\datasets\[DATASET]\results` folder. 
 
 
-For questions and remarks please contact [Adam Kubany](https://github.com/Adamkubany/Multilabel_Semantic_API_comparison/blob/master/adamku@post.bg.ac.il).
+For questions and remarks please contact [Adam Kubany](https://github.com/Adamkubany/Multilabel_Semantic_API_comparison/blob/master/adamku@post.bgu.ac.il).
