@@ -89,4 +89,4 @@ Label-based metrics: micro and macro averaging of precision, recall, and F1
 The metrics results are saved in the  `\datasets\[DATASET]\results` folder. 
 
 
-For questions and remarks please contact [Adam Kubany](https://github.com/Adamkubany/Multilabel_Semantic_API_comparison/blob/master/adamku@post.bgu.ac.il).
+For questions and remarks please contact [Adam Kubany](adamku@post.bgu.ac.il).
