@@ -88,5 +88,3 @@ Label-based metrics: micro and macro averaging of precision, recall, and F1
      $php label_based_metrics.php "OPEN_IMAGE" (or "VISUAL_GENOME")
 The metrics results are saved in the  `\datasets\[DATASET]\results` folder. 
 
-
-For questions and remarks please contact [Adam Kubany](adamku@post.bgu.ac.il).
