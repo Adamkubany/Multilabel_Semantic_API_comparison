@@ -57,7 +57,7 @@ The inference script for the following open-source APIs:
 1. Create an inference python conda environment using [`env_inference.yml`](https://github.com/Adamkubany/Multilabel_Semantic_API_comparison/blob/master/sources/env_inference.yml "env_inference.yml") file (same env as for the commercial APIs).
 2. Python will automatically download the needed model files for the first inference usage of each of the ImageNet trained APIs  (besides the YOLO ImageNet API)
 3. For the COCO trained APIs, download the [ResNet50](https://github.com/OlafenwaMoses/ImageAI/releases/download/1.0/resnet50_coco_best_v2.0.1.h5) or  [YOLO](https://github.com/OlafenwaMoses/ImageAI/releases/download/1.0/yolo.h5) model files to the [`sources`](https://github.com/Adamkubany/Multilabel_Semantic_API_comparison/tree/master/sources "sources") folder.
-4. The ImageNet trained YOLO API requires Linux OS (others can manage with Windows) and the following [installation procedure]([https://pjreddie.com/darknet/imagenet/#darknet53_448](https://pjreddie.com/darknet/imagenet/#darknet53_448)).
+4. The ImageNet trained YOLO API requires Linux OS (others can manage with Windows) and the follow [installation procedure](https://pjreddie.com/darknet/imagenet/#darknet53_448).
 
 #### Run command:
      $python labels_inference_open_source.py
