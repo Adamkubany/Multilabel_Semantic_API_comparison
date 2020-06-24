@@ -57,7 +57,7 @@ The inference script for the following open-source APIs:
 1. Create an inference python conda environment using [`env_inference.yml`](https://github.com/Adamkubany/Multilabel_Semantic_API_comparison/blob/master/sources/env_inference.yml "env_inference.yml") file (same env as for the commercial APIs).
 2. Python will automatically download the needed model files for the first inference usage of each of the ImageNet trained APIs  (besides the YOLO ImageNet API)
 3. For the COCO trained APIs, download the [ResNet50](https://github.com/OlafenwaMoses/ImageAI/releases/download/1.0/resnet50_coco_best_v2.0.1.h5) or  [YOLO](https://github.com/OlafenwaMoses/ImageAI/releases/download/1.0/yolo.h5) model files to the [`sources`](https://github.com/Adamkubany/Multilabel_Semantic_API_comparison/tree/master/sources "sources") folder.
-4. The ImageNet trained YOLO API requires Linux OS (others can manage with Windows) and the follow [installation procedure](https://pjreddie.com/darknet/imagenet/#darknet53_448).
+4. The ImageNet trained YOLO API requires Linux OS (others can manage with Windows) and the follow the [installation procedure](https://pjreddie.com/darknet/imagenet/#darknet53_448).
 
 #### Run command:
      $python labels_inference_open_source.py
@@ -67,8 +67,8 @@ The inference results are saved in the  `\datasets\[DATASET]\data` folder.
 Example-based, label-based, and the proposed semantic evaluation metrics.
 
 ### Example based and semantic metrics
-Example-based metrics: accuracy, recall, precision, and F1
-Semantic metrics: semantic accuracy, semantic recall, semantic precision, semantic F1, Word Moving Distance (WMD), fine-tune BERT, fine-tune RoBERTa
+- Example-based metrics: accuracy, recall, precision, and F1
+- Semantic metrics: semantic accuracy, semantic recall, semantic precision, semantic F1, Word Moving Distance (WMD), fine-tune BERT, fine-tune RoBERTa
 #### Installation:
 1. Create a metrics calculation python conda environment using [`env_metrics_calc.yml`](https://github.com/Adamkubany/Multilabel_Semantic_API_comparison/blob/master/sources/env_metrics_calc.yml "env_metrics_calc.yml") file.
 2. Download the [word2vec pre-trained bin file](https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing) to the [`sources`](https://github.com/Adamkubany/Multilabel_Semantic_API_comparison/tree/master/sources "sources") folder.
