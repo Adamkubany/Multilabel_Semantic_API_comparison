@@ -3,7 +3,7 @@ Some functionality and metrics calculation implementation for the "[Comparison o
 
 ```bibtex
 @article{Kubany2020SemanticClassification,
-    title = {Semantic Comparison of State-of-the-Art Deep Learning Methods for Image Multi-Label Classification},
+    title = {Comparison of State-of-the-Art Deep Learning APIs for Image Multi-Label Classification using Semantic Metrics},
     year = {2020},
     journal = {arXiv preprint arXiv: 1903.09190},
     author = {Kubany, Adam and Ben Ishay, Shimon and Ohayon, Ruben-Sacha and Shmilovici, Armin and Rokach, Lior and Doitshman, Tomer}
