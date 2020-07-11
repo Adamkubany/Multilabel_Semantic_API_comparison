@@ -8,6 +8,7 @@ Some functionality and metrics calculation implementation for the "[Comparison o
   journal={Expert Systems with Applications},
   year={2020},
   publisher={Elsevier}
+  DOI={10.1016/j.eswa.2020.113656}
 }
 ```
 ## Functionality
