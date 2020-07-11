@@ -1,5 +1,5 @@
 # Comparison of State-of-the-Art Deep Learning APIs for Image Multi-Label Classification using Semantic Metrics
-Some functionality and metrics calculation implementation for the "[Comparison of State-of-the-Art Deep Learning APIs for Image Multi-Label Classification using Semantic Metrics](https://doi.org/10.1016/j.eswa.2020.113656)" paper ([arXiv](https://arxiv.org/abs/1903.09190).
+Some functionality and metrics calculation implementation for the "[Comparison of State-of-the-Art Deep Learning APIs for Image Multi-Label Classification using Semantic Metrics](https://doi.org/10.1016/j.eswa.2020.113656)" paper ([arXiv](https://arxiv.org/abs/1903.09190)).
 
 ```bibtex
 @article{kubany2020comparison,
