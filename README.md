@@ -2,11 +2,12 @@
 Some functionality and metrics calculation implementation for the "[Comparison of State-of-the-Art Deep Learning APIs for Image Multi-Label Classification using Semantic Metrics](https://arxiv.org/abs/1903.09190)" paper.
 
 ```bibtex
-@article{Kubany2020SemanticClassification,
-    title = {Comparison of State-of-the-Art Deep Learning APIs for Image Multi-Label Classification using Semantic Metrics},
-    year = {2020},
-    journal = {arXiv preprint arXiv: 1903.09190},
-    author = {Kubany, Adam and Ben Ishay, Shimon and Ohayon, Ruben-Sacha and Shmilovici, Armin and Rokach, Lior and Doitshman, Tomer}
+@article{kubany2020comparison,
+  title={Comparison of State-of-the-Art Deep Learning APIs for Image Multi-Label Classification using Semantic Metrics},
+  author={Kubany, Adam and Ishay, Shimon Ben and Ohayon, Ruben Sacha and Shmilovici, Armin and Rokach, Lior and Doitshman, Tomer},
+  journal={Expert Systems with Applications},
+  year={2020},
+  publisher={Elsevier}
 }
 ```
 ## Functionality
