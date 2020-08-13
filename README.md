@@ -25,7 +25,7 @@ This repository includes the following functionality:
 ## ETL Procedure
 The ETL procedure for the 'Visual Genome' and 'Open Images' benchmark datasets.
 #### Installation:
-Download the dataset's metadata to the appropriate folder (\datasets\\[DATASET]\metadata). The [objects.json](https://visualgenome.org/static/data/dataset/objects_v1.json.zip) file for the Visual Genome dataset, and the [train-annotations-human-imagelabels-boxable.csv](https://storage.googleapis.com/openimages/v5/train-annotations-human-imagelabels-boxable.csv) and the [train-images-boxable-with-rotation.csv](https://storage.googleapis.com/openimages/2018_04/train/train-images-boxable-with-rotation.csv) for the Open Images dataset.
+Download the dataset's metadata to the appropriate folder (\datasets\\[DATASET]\metadata). The [objects.json](https://visualgenome.org/static/data/dataset/objects_v1.json.zip) file for the Visual Genome dataset, and [train-annotations-human-imagelabels-boxable.csv](https://storage.googleapis.com/openimages/v5/train-annotations-human-imagelabels-boxable.csv) and the [train-images-boxable-with-rotation.csv](https://storage.googleapis.com/openimages/2018_04/train/train-images-boxable-with-rotation.csv) for the Open Images dataset.
 #### Run command:
      $python etl.py
 The ETL results are saved in the  `\datasets\[DATASET]\data` folder. 
