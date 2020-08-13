@@ -1,5 +1,5 @@
 # Comparison of State-of-the-Art Deep Learning APIs for Image Multi-Label Classification using Semantic Metrics
-Some functionality and metrics calculation implementation for the "[Comparison of State-of-the-Art Deep Learning APIs for Image Multi-Label Classification using Semantic Metrics](https://doi.org/10.1016/j.eswa.2020.113656)" paper ([arXiv](https://arxiv.org/abs/1903.09190)).
+Some functionality and metrics calculation implementation for the "[Comparison of State-of-the-Art Deep Learning APIs for Image Multi-Label Classification using Semantic Metrics](https://doi.org/10.1016/j.eswa.2020.113656)" paper (also in [arXiv](https://arxiv.org/abs/1903.09190)).
 
 ```bibtex
 @article{kubany2020comparison,
@@ -8,7 +8,7 @@ Some functionality and metrics calculation implementation for the "[Comparison o
   journal={Expert Systems with Applications},
   year={2020},
   publisher={Elsevier}
-  DOI={[https://doi.org/10.1016/j.eswa.2020.113656](https://doi.org/10.1016/j.eswa.2020.113656)}
+  DOI={https://doi.org/10.1016/j.eswa.2020.113656}
 }
 ```
 ## Functionality
